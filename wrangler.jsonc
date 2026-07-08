@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "recurring-items-tracker",
+  "main": "src/index.js",
+  "compatibility_date": "2026-07-01",
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "recurring_tracker",
+      // Filled in automatically by `wrangler d1 create` (see README).
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "recurring-items-tracker",
+  "version": "1.0.0",
+  "description": "Household recurring-items tracker — Cloudflare Worker + D1 (rebuilt from the Google Apps Script version).",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute recurring_tracker --local --file=./schema.sql",
+    "db:remote": "wrangler d1 execute recurring_tracker --remote --file=./schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.107.1"
+  }
+}
