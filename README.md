@@ -24,7 +24,21 @@ small JSON API backed by D1:
 Editing any field re-syncs and recomputes the projected **Next Due Date** across
 a 36-month window (2026–2028), preserving the original scheduling logic.
 
-## First-time setup
+## ⚠️ Google Drive note (read first)
+
+This folder is the **canonical source**, kept on Google Drive for backup/sync.
+**Do not run `npm` or `wrangler` from here** — Google Drive File Stream serves
+`node_modules` files as virtual placeholders, which corrupts them and breaks the
+toolchain (`ERR_INVALID_PACKAGE_CONFIG`). Also, the `&` in the parent path
+("EKG & KKG") breaks npm's Windows shell shims.
+
+Instead:
+- **Deploy** happens automatically via **GitHub → Cloudflare** (see below). You
+  never need to run tooling locally for normal updates.
+- **If you ever need to build/run locally**, `git clone` the GitHub repo to a
+  plain local path (e.g. `C:\dev\household-tracker`) and run commands there.
+
+## First-time setup (from a LOCAL clone, not this Drive folder)
 
 Prereqs: Node 18+, a Cloudflare account (`wrangler login` or a `CLOUDFLARE_API_TOKEN`).
 
