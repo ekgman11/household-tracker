@@ -12,8 +12,7 @@
     {
       "binding": "DB",
       "database_name": "recurring_tracker",
-      // Filled in automatically by `wrangler d1 create` (see README).
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+      "database_id": "843b5196-ad80-4242-8706-b831b47aee61"
     }
   ]
 }
