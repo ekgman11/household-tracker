@@ -75,8 +75,8 @@ export default {
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
           )
             .bind(
-              b.category || "Home",
-              b.name || "New Item",
+              b.category ?? "Home",
+              b.name ?? "New item",
               Number(b.number) || 0,
               b.interval || "TBD",
               b.startMonth || "TBD",

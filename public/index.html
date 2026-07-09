@@ -56,10 +56,13 @@
   </div>
 
   <div id="app">Loading items...</div>
+  <datalist id="cat-options"></datalist>
 
   <script>
     const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     let currentTrackerData = [];
+    let expandedItems = new Set();   // item ids whose cards are expanded (preserved across re-render)
+    let focusItemId = null;          // item to scroll back into view after the next render
 
     document.addEventListener("DOMContentLoaded", function () {
       syncData();
@@ -235,13 +238,23 @@
             <div class="card" id="card-${item.id}">
               <div class="row-summary" onclick="toggleAccordion(${item.id})">
                 <div class="row-left">
-                  <span class="arrow" id="arrow-${item.id}"></span>
+                  <span class="arrow ${expandedItems.has(item.id) ? 'expanded' : ''}" id="arrow-${item.id}"></span>
                   <span class="item-name">${item.name}</span>
                 </div>
                 <div class="${dateClass}" id="date-display-${item.id}">${nextDateStr}</div>
               </div>
 
-              <div class="row-details" id="details-${item.id}">
+              <div class="row-details ${expandedItems.has(item.id) ? 'expanded' : ''}" id="details-${item.id}">
+                <div class="meta-group">
+                  <div>
+                    <label>Name</label>
+                    <input type="text" value="${item.name}" onchange="updateField(${item.id}, 'name', this.value)">
+                  </div>
+                  <div>
+                    <label>Category</label>
+                    <input type="text" list="cat-options" value="${item.category}" onchange="updateField(${item.id}, 'category', this.value)">
+                  </div>
+                </div>
                 <div class="meta-group">
                   <div>
                     <label>Number</label>
@@ -300,6 +313,22 @@
         html += `</div></div>`;
       });
       app.innerHTML = html;
+
+      // Populate the category autocomplete from existing categories.
+      const catOpts = document.getElementById("cat-options");
+      if (catOpts) {
+        catOpts.innerHTML = sortedCategories
+          .filter((c) => c !== "Uncategorized")
+          .map((c) => `<option value="${c}"></option>`)
+          .join("");
+      }
+
+      // Keep the just-added / just-edited card in view after the re-render.
+      if (focusItemId != null) {
+        const el = document.getElementById("card-" + focusItemId);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        focusItemId = null;
+      }
     }
 
     function toggleCategory(catId) {
@@ -308,19 +337,27 @@
     }
 
     function toggleAccordion(id) {
+      if (expandedItems.has(id)) expandedItems.delete(id);
+      else expandedItems.add(id);
       document.getElementById("arrow-" + id).classList.toggle("expanded");
       document.getElementById("details-" + id).classList.toggle("expanded");
     }
 
     function updateField(id, field, value) {
+      focusItemId = id;
       apiPatch(id, field, value).then(syncData).catch(showError);
     }
 
+    // Add a blank item inline: it lands in an "Uncategorized" group at the
+    // bottom, auto-expanded with every field ready to fill in (no pop-ups).
     function addItem() {
-      const name = prompt("New item name?");
-      if (!name) return;
-      const category = prompt("Category? (CPAP, Home, Car, Personal)", "Home") || "Home";
-      apiCreate({ name, category }).then(syncData).catch(showError);
+      apiCreate({ name: "New item", category: "" })
+        .then(function (item) {
+          expandedItems.add(item.id);
+          focusItemId = item.id;
+          syncData();
+        })
+        .catch(showError);
     }
 
     function deleteItem(id, name) {
