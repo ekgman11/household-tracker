@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Recurring Items Tracker</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 12px; background: #f4f6f9; color: #333; }
-    h2 { color: #1D2D47; text-align: center; font-size: 20px; margin-bottom: 16px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; background: #f4f6f9; color: #333; }
+    /* Full-bleed sticky header + centered mobile-width content column (mirrors the Capex Builder layout). */
+    .app-header { position: sticky; top: 0; z-index: 10; background: #1D2D47; color: #fff; text-align: center; padding: 14px 16px; font-size: 18px; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+    .container { max-width: 480px; margin: 0 auto; padding: 12px; }
 
     .sort-controls { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; background: #fff; padding: 10px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); flex-wrap: wrap; }
     .sort-controls label { font-size: 13px; font-weight: bold; color: #1D2D47; margin: 0; text-transform: none; }
@@ -42,8 +44,9 @@
 </head>
 <body>
 
-  <h2>Recurring Items Tracker</h2>
+  <div class="app-header">Recurring Items Tracker</div>
 
+  <div class="container">
   <div class="sort-controls">
     <label for="sortDropdown">Sort:</label>
     <select id="sortDropdown" onchange="applySort()">
@@ -57,6 +60,7 @@
 
   <div id="app">Loading items...</div>
   <datalist id="cat-options"></datalist>
+  </div>
 
   <script>
     const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
